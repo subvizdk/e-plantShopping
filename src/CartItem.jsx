@@ -2,9 +2,11 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 
-function CartItem({ onContinueShopping }) {
+function CartItem({ onHomeClick, onPlantsClick, onCartClick }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const calculateTotalAmount = () => {
     return cartItems.reduce((total, item) => {
@@ -16,14 +18,8 @@ function CartItem({ onContinueShopping }) {
     return (parseFloat(item.cost.substring(1)) * item.quantity).toFixed(2);
   };
 
-  const handleContinueShopping = (e) => {
-    if (onContinueShopping) {
-      onContinueShopping(e);
-    }
-  };
-
   const handleCheckoutShopping = () => {
-    alert('Functionality to be added for future reference');
+    alert('Coming Soon');
   };
 
   const handleIncrement = (item) => {
@@ -59,13 +55,21 @@ function CartItem({ onContinueShopping }) {
           <h2>Paradise Nursery</h2>
           <p>Where Green Meets Serenity</p>
         </div>
+
+        <div className="nav-links">
+          <button className="nav-link" onClick={onHomeClick}>Home</button>
+          <button className="nav-link" onClick={onPlantsClick}>Plants</button>
+          <button className="cart-button" onClick={onCartClick}>
+            <span role="img" aria-label="cart">🛒</span> {totalQuantity}
+          </button>
+        </div>
       </nav>
 
       <div className="cart-container">
         <h2>Total Cart Amount: ${calculateTotalAmount().toFixed(2)}</h2>
 
         {cartItems.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <p className="empty-cart-message">Your cart is empty.</p>
         ) : (
           cartItems.map((item) => (
             <div className="cart-card" key={item.name}>
@@ -73,7 +77,7 @@ function CartItem({ onContinueShopping }) {
 
               <div className="cart-item-details">
                 <h3>{item.name}</h3>
-                <p>{item.cost}</p>
+                <p>Unit Price: {item.cost}</p>
 
                 <div className="quantity-controls">
                   <button onClick={() => handleDecrement(item)}>-</button>
@@ -82,6 +86,7 @@ function CartItem({ onContinueShopping }) {
                 </div>
 
                 <p>Total: ${calculateTotalCost(item)}</p>
+
                 <button className="delete-btn" onClick={() => handleRemove(item)}>
                   Delete
                 </button>
@@ -91,7 +96,7 @@ function CartItem({ onContinueShopping }) {
         )}
 
         <div className="cart-actions">
-          <button onClick={handleContinueShopping}>Continue Shopping</button>
+          <button onClick={onPlantsClick}>Continue Shopping</button>
           <button onClick={handleCheckoutShopping}>Checkout</button>
         </div>
       </div>
