@@ -1,1 +1,1 @@
-# Project e-plantShopping
+# e-plantShopping
